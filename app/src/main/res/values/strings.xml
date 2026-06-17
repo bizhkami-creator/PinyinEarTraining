@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">ピンイン耳トレ - HSK1級対応</string>
+    <string name="title_home">ピンイン耳トレ</string>
+    <string name="high_score_format">最高スコア %d点</string>
+    <string name="ranking_title">ランキング</string>
+    <string name="label_questions_count">問題数:</string>
+    <string name="label_options_count">選択肢数:</string>
+    <string name="btn_start">START</string>
+
+    <string-array name="questions_count_options">
+        <item>10問</item>
+        <item>20問</item>
+        <item>50問</item>
+    </string-array>
+
+    <string-array name="options_count_options">
+        <item>3択</item>
+        <item>5択</item>
+    </string-array>
+
+    <string name="dummy_rank1">🥇 1000点 2026/06/18 21:30</string>
+    <string name="dummy_rank2">🥈 900点 2026/06/17 08:15</string>
+    <string name="dummy_rank3">🥉 850点 2026/06/16 22:05</string>
 </resources>

@@ -26,14 +26,16 @@ class QuizActivity : AppCompatActivity() {
         // Intentから設定を取得
         val totalQuestions = intent.getIntExtra("TOTAL_QUESTIONS", 10)
         val optionsCount = intent.getIntExtra("OPTIONS_COUNT", 3)
+        val currentQuestion = intent.getIntExtra("CURRENT_QUESTION", 1)
+        val correctCount = intent.getIntExtra("CORRECT_COUNT", 0)
 
         // UI要素の初期化
         val tvProgress = findViewById<TextView>(R.id.tvProgress)
         val btnOption4 = findViewById<Button>(R.id.btnOption4)
         val btnOption5 = findViewById<Button>(R.id.btnOption5)
 
-        // プログレス表示の更新 (1問目固定)
-        tvProgress.text = getString(R.string.quiz_progress_format, 1, totalQuestions)
+        // プログレス表示の更新
+        tvProgress.text = getString(R.string.quiz_progress_format, currentQuestion, totalQuestions)
 
         // 選択肢数に応じてボタンの表示/非表示を切り替え
         if (optionsCount == 3) {
@@ -59,8 +61,14 @@ class QuizActivity : AppCompatActivity() {
                 val intent = Intent(this, AnswerActivity::class.java).apply {
                     putExtra("IS_CORRECT", selectedPinyin == correctPinyin)
                     putExtra("SELECTED_PINYIN", selectedPinyin)
+                    putExtra("TOTAL_QUESTIONS", totalQuestions)
+                    putExtra("OPTIONS_COUNT", optionsCount)
+                    putExtra("CURRENT_QUESTION", currentQuestion)
+                    putExtra("CORRECT_COUNT", correctCount)
                 }
                 startActivity(intent)
+                // 次の画面へ行くので、このActivityはスタックから除く（または残しても良いが、今回は遷移管理のため保持）
+                // ただし要件に「QuizActivityへ戻る」とあるので、一旦保持する
             }
         }
 

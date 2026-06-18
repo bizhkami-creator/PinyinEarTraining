@@ -42,6 +42,8 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, QuizActivity::class.java).apply {
                 putExtra("TOTAL_QUESTIONS", totalQuestions)
                 putExtra("OPTIONS_COUNT", optionsCount)
+                putExtra("CURRENT_QUESTION", 1)
+                putExtra("CORRECT_COUNT", 0)
             }
             startActivity(intent)
         }

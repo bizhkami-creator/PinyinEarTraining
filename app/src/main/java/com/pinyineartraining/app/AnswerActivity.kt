@@ -1,5 +1,6 @@
 package com.pinyineartraining.app
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -24,6 +25,14 @@ class AnswerActivity : AppCompatActivity() {
 
         val isCorrect = intent.getBooleanExtra("IS_CORRECT", false)
         val selectedPinyin = intent.getStringExtra("SELECTED_PINYIN") ?: ""
+        val totalQuestions = intent.getIntExtra("TOTAL_QUESTIONS", 10)
+        val optionsCount = intent.getIntExtra("OPTIONS_COUNT", 3)
+        val currentQuestion = intent.getIntExtra("CURRENT_QUESTION", 1)
+        var correctCount = intent.getIntExtra("CORRECT_COUNT", 0)
+
+        if (isCorrect) {
+            correctCount++
+        }
         
         // 仮の正解データ
         val correctPinyin = "ài"
@@ -53,7 +62,25 @@ class AnswerActivity : AppCompatActivity() {
         tvMeaning.text = meaning
 
         btnNext.setOnClickListener {
-            // QuizActivityに戻る
+            if (currentQuestion < totalQuestions) {
+                // 次の問題へ
+                val intent = Intent(this, QuizActivity::class.java).apply {
+                    putExtra("TOTAL_QUESTIONS", totalQuestions)
+                    putExtra("OPTIONS_COUNT", optionsCount)
+                    putExtra("CURRENT_QUESTION", currentQuestion + 1)
+                    putExtra("CORRECT_COUNT", correctCount)
+                    // バックスタックが残りすぎないように、前のクイズ/回答画面はクリア対象
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                }
+                startActivity(intent)
+            } else {
+                // 全問題終了、結果画面へ
+                val intent = Intent(this, ResultActivity::class.java).apply {
+                    putExtra("TOTAL_QUESTIONS", totalQuestions)
+                    putExtra("CORRECT_COUNT", correctCount)
+                }
+                startActivity(intent)
+            }
             finish()
         }
     }

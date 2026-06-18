@@ -1,10 +1,10 @@
 package com.pinyineartraining.app
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Spinner
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -32,11 +32,18 @@ class MainActivity : AppCompatActivity() {
 
         // STARTボタンのクリックリスナー
         btnStart.setOnClickListener {
-            val selectedQuestions = spinnerQuestions.selectedItem.toString()
-            val selectedOptions = spinnerOptions.selectedItem.toString()
+            val selectedQuestionsStr = spinnerQuestions.selectedItem.toString()
+            val selectedOptionsStr = spinnerOptions.selectedItem.toString()
             
-            val message = "設定: $selectedQuestions / $selectedOptions で開始します"
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+            // 数値部分のみ抽出
+            val totalQuestions = selectedQuestionsStr.replace("問", "").toInt()
+            val optionsCount = selectedOptionsStr.replace("択", "").toInt()
+
+            val intent = Intent(this, QuizActivity::class.java).apply {
+                putExtra("TOTAL_QUESTIONS", totalQuestions)
+                putExtra("OPTIONS_COUNT", optionsCount)
+            }
+            startActivity(intent)
         }
     }
 }

@@ -26,4 +26,9 @@
     <string name="btn_play_audio">🔊 再生</string>
     <string name="quiz_instruction">音声を聞いて正しいピンインを選んでください</string>
     <string name="toast_selected_format">選択: %s</string>
+
+    <string name="answer_correct">正解！</string>
+    <string name="answer_incorrect">不正解</string>
+    <string name="answer_correct_pinyin_format">正解: %s</string>
+    <string name="btn_next">次へ</string>
 </resources>

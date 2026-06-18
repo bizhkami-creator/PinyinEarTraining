@@ -1,5 +1,6 @@
 package com.pinyineartraining.app
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -49,14 +50,17 @@ class QuizActivity : AppCompatActivity() {
             btnOption5,
         )
 
+        val correctPinyin = "ài"
+
         optionButtons.forEach { button ->
             button.setOnClickListener {
                 val selectedPinyin = (it as Button).text.toString()
-                Toast.makeText(
-                    this,
-                    getString(R.string.toast_selected_format, selectedPinyin),
-                    Toast.LENGTH_SHORT
-                ).show()
+                
+                val intent = Intent(this, AnswerActivity::class.java).apply {
+                    putExtra("IS_CORRECT", selectedPinyin == correctPinyin)
+                    putExtra("SELECTED_PINYIN", selectedPinyin)
+                }
+                startActivity(intent)
             }
         }
 

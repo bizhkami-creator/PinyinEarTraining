@@ -2,6 +2,8 @@ package com.pinyineartraining.app
 
 import android.content.Intent
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -10,8 +12,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import java.util.Locale
 
-class QuizActivity : AppCompatActivity() {
+class QuizActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
+
+    private var tts: TextToSpeech? = null
+    private var currentWord: Word? = null
+    private var isTtsReady = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +29,9 @@ class QuizActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        // TTSの初期化
+        tts = TextToSpeech(this, this)
 
         // Intentから設定を取得
         val totalQuestions = intent.getIntExtra("TOTAL_QUESTIONS", 10)
@@ -47,22 +57,19 @@ class QuizActivity : AppCompatActivity() {
         }
 
         // 単語データの取得
-        // currentQuestion (1-indexed) をリストのインデックス (0-indexed) に変換。
-        val currentWord = if (wordList.isNotEmpty()) {
+        currentWord = if (wordList.isNotEmpty()) {
             wordList[(currentQuestion - 1) % wordList.size]
         } else {
             Word(1, "爱", "ài", "愛する")
         }
-        val correctPinyin = currentWord.pinyin
+        val correctPinyin = currentWord?.pinyin ?: ""
 
         // 選択肢の生成
         val allVariations = PinyinUtils.generateToneVariations(correctPinyin)
         val choices = if (optionsCount == 3) {
-            // 正解を含めて3つ選ぶ
             val otherVariations = allVariations.filter { it != correctPinyin }.shuffled()
             (listOf(correctPinyin) + otherVariations.take(2)).shuffled()
         } else {
-            // 5択（すべて、または足りない場合はある分だけ）
             allVariations.shuffled()
         }
 
@@ -75,7 +82,6 @@ class QuizActivity : AppCompatActivity() {
             btnOption5,
         )
 
-        // 一旦すべてのボタンを隠してから、必要な分だけ表示
         optionButtons.forEach { it.visibility = View.GONE }
 
         choices.forEachIndexed { index, choice ->
@@ -97,7 +103,6 @@ class QuizActivity : AppCompatActivity() {
                     putExtra("CURRENT_QUESTION", currentQuestion)
                     putExtra("CORRECT_COUNT", correctCount)
                     putExtra("WORD_LIST", wordList)
-                    // 単語情報を渡す
                     putExtra("WORD_DATA", currentWord)
                 }
                 startActivity(intent)
@@ -105,7 +110,39 @@ class QuizActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btnPlay).setOnClickListener {
-            Toast.makeText(this, "音声再生（モック）", Toast.LENGTH_SHORT).show()
+            speakCurrentWord()
         }
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            val result = tts?.setLanguage(Locale.CHINESE)
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("TTS", "Language not supported")
+                Toast.makeText(this, "中国語の音声データが見つかりません", Toast.LENGTH_SHORT).show()
+            } else {
+                isTtsReady = true
+                // 初回自動再生
+                speakCurrentWord()
+            }
+        } else {
+            Log.e("TTS", "Initialization failed")
+            Toast.makeText(this, "TTSの初期化に失敗しました", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun speakCurrentWord() {
+        if (isTtsReady) {
+            val text = currentWord?.hanzi ?: ""
+            if (text.isNotEmpty()) {
+                tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        tts?.stop()
+        tts?.shutdown()
+        super.onDestroy()
     }
 }

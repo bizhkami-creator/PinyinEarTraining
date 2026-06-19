@@ -34,7 +34,13 @@
 - 問題番号に応じた単語の切り替えロジック実装
 - 遷移時のWordオブジェクト受け渡し（Parcelable）
 
-## フェーズ7：TTSと音声再生の実装 (Day 7)
+## フェーズ7：単語データのCSV化と外部読み込み (Day 7) [完了]
+- CSVファイル (hsk1_words.csv) の作成
+- WordRepository によるCSV読み込み実装
+- Wordモデルへのlevelフィールド追加
+- QuizActivityでの動的データ読み込み
+
+## フェーズ8：TTSと音声再生の実装 (Day 8)
 - TextToSpeechによる音声再生機能
 - 再生ボタン押下時の動作実装
 - クイズ画面遷移時の自動音声再生

@@ -125,7 +125,28 @@ Day6では本物のデータと音声を追加する。(一部完了)
 
 ### 次回作業
 
-Day7ではTextToSpeechを実装し、実際の音声を再生する。
+Day7では単語データをCSV化し、外部ファイルから読み込む。(完了)
+
+- CSVファイルの作成とassetsへの配置
+- Wordモデルの更新とリポジトリクラスの作成
+
+## Day7
+
+### 作業内容
+
+- `app/src/main/assets/hsk1_words.csv` の作成（10語分）
+- `Word` データクラスに `level` フィールドを追加
+- `WordRepository` クラスを実装し、assets内のCSVからデータを読み込む機能を実装
+- `QuizActivity` および `AnswerActivity` を更新し、CSVから読み込んだデータを使用するように変更
+
+### 決定事項
+
+- 単語データはCSV形式で管理し、`assets` フォルダに配置する
+- 読み込み失敗時のために、仮データのフォールバックを実装する
+
+### 次回作業
+
+Day8ではTextToSpeechを実装し、実際の音声を再生する。
 
 - TextToSpeechの初期化
 - 再生ボタン押下時の音声出力

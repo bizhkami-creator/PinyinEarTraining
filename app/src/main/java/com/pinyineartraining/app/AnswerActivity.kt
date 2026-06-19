@@ -32,7 +32,7 @@ class AnswerActivity : AppCompatActivity() {
 
         // IntentからWordオブジェクトを受け取る（SDK 33以降推奨の型安全な取得も考慮しつつ、今回は互換性の高い方法で取得）
         @Suppress("DEPRECATION")
-        val currentWord = intent.getParcelableExtra<Word>("WORD_DATA") ?: Word("爱", "ài", "愛する")
+        val currentWord = intent.getParcelableExtra<Word>("WORD_DATA") ?: Word(1, "爱", "ài", "愛する")
 
         if (isCorrect) {
             correctCount++

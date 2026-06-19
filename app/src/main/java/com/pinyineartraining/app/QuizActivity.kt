@@ -44,10 +44,14 @@ class QuizActivity : AppCompatActivity() {
         }
 
         // 単語データの取得
-        val wordList = WordData.hsk1SampleList
+        val wordList = WordRepository.loadWords(this)
         // currentQuestion (1-indexed) をリストのインデックス (0-indexed) に変換。
         // リスト範囲外の場合はループさせる。
-        val currentWord = wordList[(currentQuestion - 1) % wordList.size]
+        val currentWord = if (wordList.isNotEmpty()) {
+            wordList[(currentQuestion - 1) % wordList.size]
+        } else {
+            Word(1, "爱", "ài", "愛する")
+        }
         val correctPinyin = currentWord.pinyin
 
         // 選択肢ボタンのテキスト設定（仮実装：正解と、適当なバリエーション）

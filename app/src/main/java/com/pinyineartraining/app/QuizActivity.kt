@@ -28,6 +28,9 @@ class QuizActivity : AppCompatActivity() {
         val optionsCount = intent.getIntExtra("OPTIONS_COUNT", 3)
         val currentQuestion = intent.getIntExtra("CURRENT_QUESTION", 1)
         val correctCount = intent.getIntExtra("CORRECT_COUNT", 0)
+        
+        @Suppress("DEPRECATION")
+        val wordList = intent.getParcelableArrayListExtra<Word>("WORD_LIST") ?: arrayListOf()
 
         // UI要素の初期化
         val tvProgress = findViewById<TextView>(R.id.tvProgress)
@@ -44,9 +47,7 @@ class QuizActivity : AppCompatActivity() {
         }
 
         // 単語データの取得
-        val wordList = WordRepository.loadWords(this)
         // currentQuestion (1-indexed) をリストのインデックス (0-indexed) に変換。
-        // リスト範囲外の場合はループさせる。
         val currentWord = if (wordList.isNotEmpty()) {
             wordList[(currentQuestion - 1) % wordList.size]
         } else {
@@ -84,6 +85,7 @@ class QuizActivity : AppCompatActivity() {
                     putExtra("OPTIONS_COUNT", optionsCount)
                     putExtra("CURRENT_QUESTION", currentQuestion)
                     putExtra("CORRECT_COUNT", correctCount)
+                    putExtra("WORD_LIST", wordList)
                     // 単語情報を渡す
                     putExtra("WORD_DATA", currentWord)
                 }

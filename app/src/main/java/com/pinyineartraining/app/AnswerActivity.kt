@@ -29,6 +29,9 @@ class AnswerActivity : AppCompatActivity() {
         val optionsCount = intent.getIntExtra("OPTIONS_COUNT", 3)
         val currentQuestion = intent.getIntExtra("CURRENT_QUESTION", 1)
         var correctCount = intent.getIntExtra("CORRECT_COUNT", 0)
+        
+        @Suppress("DEPRECATION")
+        val wordList = intent.getParcelableArrayListExtra<Word>("WORD_LIST") ?: arrayListOf()
 
         // IntentからWordオブジェクトを受け取る（SDK 33以降推奨の型安全な取得も考慮しつつ、今回は互換性の高い方法で取得）
         @Suppress("DEPRECATION")
@@ -73,6 +76,7 @@ class AnswerActivity : AppCompatActivity() {
                     putExtra("OPTIONS_COUNT", optionsCount)
                     putExtra("CURRENT_QUESTION", currentQuestion + 1)
                     putExtra("CORRECT_COUNT", correctCount)
+                    putExtra("WORD_LIST", wordList)
                     // バックスタックが残りすぎないように、前のクイズ/回答画面はクリア対象
                     flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 }

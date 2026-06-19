@@ -39,11 +39,24 @@ class MainActivity : AppCompatActivity() {
             val totalQuestions = selectedQuestionsStr.replace("問", "").toInt()
             val optionsCount = selectedOptionsStr.replace("択", "").toInt()
 
+            // 単語リストを読み込んでランダムに抽出
+            val allWords = WordRepository.loadWords(this)
+            val shuffledWords = allWords.shuffled()
+            val sessionWords = if (shuffledWords.size > totalQuestions) {
+                shuffledWords.take(totalQuestions)
+            } else {
+                shuffledWords
+            }
+            
+            // 実際の出題数を調整（CSVの単語数が選択数より少ない場合）
+            val finalTotalQuestions = sessionWords.size
+
             val intent = Intent(this, QuizActivity::class.java).apply {
-                putExtra("TOTAL_QUESTIONS", totalQuestions)
+                putExtra("TOTAL_QUESTIONS", finalTotalQuestions)
                 putExtra("OPTIONS_COUNT", optionsCount)
                 putExtra("CURRENT_QUESTION", 1)
                 putExtra("CORRECT_COUNT", 0)
+                putParcelableArrayListExtra("WORD_LIST", ArrayList(sessionWords))
             }
             startActivity(intent)
         }

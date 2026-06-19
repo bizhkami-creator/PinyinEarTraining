@@ -55,24 +55,35 @@ class QuizActivity : AppCompatActivity() {
         }
         val correctPinyin = currentWord.pinyin
 
-        // 選択肢ボタンのテキスト設定（仮実装：正解と、適当なバリエーション）
-        // ※ 本来はここでバリエーション生成ロジックを入れるが、今回は要件通り「正解が含まれる」ように簡易設定
-        findViewById<Button>(R.id.btnOption1).text = correctPinyin
-        findViewById<Button>(R.id.btnOption2).text = correctPinyin + "1"
-        findViewById<Button>(R.id.btnOption3).text = correctPinyin + "2"
-        if (optionsCount == 5) {
-            btnOption4.text = correctPinyin + "3"
-            btnOption5.text = correctPinyin + "4"
+        // 選択肢の生成
+        val allVariations = PinyinUtils.generateToneVariations(correctPinyin)
+        val choices = if (optionsCount == 3) {
+            // 正解を含めて3つ選ぶ
+            val otherVariations = allVariations.filter { it != correctPinyin }.shuffled()
+            (listOf(correctPinyin) + otherVariations.take(2)).shuffled()
+        } else {
+            // 5択（すべて、または足りない場合はある分だけ）
+            allVariations.shuffled()
         }
 
-        // 選択肢ボタンのクリックリスナー設定
+        // 選択肢ボタンの設定
         val optionButtons = listOf(
-            findViewById(R.id.btnOption1),
-            findViewById(R.id.btnOption2),
-            findViewById(R.id.btnOption3),
+            findViewById<Button>(R.id.btnOption1),
+            findViewById<Button>(R.id.btnOption2),
+            findViewById<Button>(R.id.btnOption3),
             btnOption4,
             btnOption5,
         )
+
+        // 一旦すべてのボタンを隠してから、必要な分だけ表示
+        optionButtons.forEach { it.visibility = View.GONE }
+
+        choices.forEachIndexed { index, choice ->
+            if (index < optionButtons.size) {
+                optionButtons[index].text = choice
+                optionButtons[index].visibility = View.VISIBLE
+            }
+        }
 
         optionButtons.forEach { button ->
             button.setOnClickListener {

@@ -87,3 +87,51 @@ object WordData {
         Word(1, "吃", "chí", "食べる")
     )
 }
+
+object PinyinUtils {
+    private val toneVariations = mapOf(
+        'a' to listOf("ā", "á", "ǎ", "à", "a"),
+        'ā' to listOf("ā", "á", "ǎ", "à", "a"),
+        'á' to listOf("ā", "á", "ǎ", "à", "a"),
+        'ǎ' to listOf("ā", "á", "ǎ", "à", "a"),
+        'à' to listOf("ā", "á", "ǎ", "à", "a"),
+        'e' to listOf("ē", "é", "ě", "è", "e"),
+        'ē' to listOf("ē", "é", "ě", "è", "e"),
+        'é' to listOf("ē", "é", "ě", "è", "e"),
+        'ě' to listOf("ē", "é", "ě", "è", "e"),
+        'è' to listOf("ē", "é", "ě", "è", "e"),
+        'i' to listOf("ī", "í", "ǐ", "ì", "i"),
+        'ī' to listOf("ī", "í", "ǐ", "ì", "i"),
+        'í' to listOf("ī", "í", "ǐ", "ì", "i"),
+        'ǐ' to listOf("ī", "í", "ǐ", "ì", "i"),
+        'ì' to listOf("ī", "í", "ǐ", "ì", "i"),
+        'o' to listOf("ō", "ó", "ǒ", "ò", "o"),
+        'ō' to listOf("ō", "ó", "ǒ", "ò", "o"),
+        'ó' to listOf("ō", "ó", "ǒ", "ò", "o"),
+        'ǒ' to listOf("ō", "ó", "ǒ", "ò", "o"),
+        'ò' to listOf("ō", "ó", "ǒ", "ò", "o"),
+        'u' to listOf("ū", "ú", "ǔ", "ù", "u"),
+        'ū' to listOf("ū", "ú", "ǔ", "ù", "u"),
+        'ú' to listOf("ū", "ú", "ǔ", "ù", "u"),
+        'ǔ' to listOf("ū", "ú", "ǔ", "ù", "u"),
+        'ù' to listOf("ū", "ú", "ǔ", "ù", "u"),
+        'ü' to listOf("ǖ", "ǘ", "ǚ", "ǜ", "ü"),
+        'ǖ' to listOf("ǖ", "ǘ", "ǚ", "ǜ", "ü"),
+        'ǘ' to listOf("ǖ", "ǘ", "ǚ", "ǜ", "ü"),
+        'ǚ' to listOf("ǖ", "ǘ", "ǚ", "ǜ", "ü"),
+        'ǜ' to listOf("ǖ", "ǘ", "ǚ", "ǜ", "ü")
+    )
+
+    fun generateToneVariations(pinyin: String): List<String> {
+        val vowelIndex = pinyin.indexOfFirst { toneVariations.containsKey(it.lowercaseChar()) }
+        if (vowelIndex == -1) return listOf(pinyin)
+
+        val targetChar = pinyin[vowelIndex].lowercaseChar()
+        val variations = toneVariations[targetChar] ?: return listOf(pinyin)
+
+        return variations.map { variation ->
+            val newChar = if (pinyin[vowelIndex].isUpperCase()) variation.uppercase() else variation
+            pinyin.substring(0, vowelIndex) + newChar + pinyin.substring(vowelIndex + 1)
+        }
+    }
+}

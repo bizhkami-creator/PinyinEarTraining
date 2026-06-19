@@ -104,8 +104,29 @@ Day5ではクイズのコアロジックを強化する。(完了)
 
 ### 次回作業
 
-Day6では本物のデータと音声を追加する。
+Day6では本物のデータと音声を追加する。(一部完了)
 
-- TextToSpeechの初期化と音声再生
-- HSK1級単語データ（150語）の定義
-- 問題のランダム出題ロジック
+- 単語データモデルの定義
+- 仮単語リスト（10語）による出題の実装
+
+## Day6
+
+### 作業内容
+
+- `Word` データクラスと `WordData` オブジェクトの作成（`kotlin-parcelize` を使用）
+- `QuizActivity` において、`currentQuestion` に基づいて `WordData` から単語を選択するロジックを実装
+- `AnswerActivity` への `Word` オブジェクトの受け渡しと表示の実装
+- `build.gradle.kts` への `kotlin-parcelize` プラグインの追加
+
+### 決定事項
+
+- 単語データの受け渡しには `Parcelable` を使用する
+- 現時点では `currentQuestion` 順に出題し、リスト末尾に達したらループさせる
+
+### 次回作業
+
+Day7ではTextToSpeechを実装し、実際の音声を再生する。
+
+- TextToSpeechの初期化
+- 再生ボタン押下時の音声出力
+- クイズ開始時の自動再生

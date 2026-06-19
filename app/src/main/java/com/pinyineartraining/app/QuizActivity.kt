@@ -43,6 +43,23 @@ class QuizActivity : AppCompatActivity() {
             btnOption5.visibility = View.GONE
         }
 
+        // 単語データの取得
+        val wordList = WordData.hsk1SampleList
+        // currentQuestion (1-indexed) をリストのインデックス (0-indexed) に変換。
+        // リスト範囲外の場合はループさせる。
+        val currentWord = wordList[(currentQuestion - 1) % wordList.size]
+        val correctPinyin = currentWord.pinyin
+
+        // 選択肢ボタンのテキスト設定（仮実装：正解と、適当なバリエーション）
+        // ※ 本来はここでバリエーション生成ロジックを入れるが、今回は要件通り「正解が含まれる」ように簡易設定
+        findViewById<Button>(R.id.btnOption1).text = correctPinyin
+        findViewById<Button>(R.id.btnOption2).text = correctPinyin + "1"
+        findViewById<Button>(R.id.btnOption3).text = correctPinyin + "2"
+        if (optionsCount == 5) {
+            btnOption4.text = correctPinyin + "3"
+            btnOption5.text = correctPinyin + "4"
+        }
+
         // 選択肢ボタンのクリックリスナー設定
         val optionButtons = listOf(
             findViewById(R.id.btnOption1),
@@ -51,8 +68,6 @@ class QuizActivity : AppCompatActivity() {
             btnOption4,
             btnOption5,
         )
-
-        val correctPinyin = "ài"
 
         optionButtons.forEach { button ->
             button.setOnClickListener {
@@ -65,10 +80,10 @@ class QuizActivity : AppCompatActivity() {
                     putExtra("OPTIONS_COUNT", optionsCount)
                     putExtra("CURRENT_QUESTION", currentQuestion)
                     putExtra("CORRECT_COUNT", correctCount)
+                    // 単語情報を渡す
+                    putExtra("WORD_DATA", currentWord)
                 }
                 startActivity(intent)
-                // 次の画面へ行くので、このActivityはスタックから除く（または残しても良いが、今回は遷移管理のため保持）
-                // ただし要件に「QuizActivityへ戻る」とあるので、一旦保持する
             }
         }
 

@@ -30,14 +30,18 @@ class AnswerActivity : AppCompatActivity() {
         val currentQuestion = intent.getIntExtra("CURRENT_QUESTION", 1)
         var correctCount = intent.getIntExtra("CORRECT_COUNT", 0)
 
+        // IntentからWordオブジェクトを受け取る（SDK 33以降推奨の型安全な取得も考慮しつつ、今回は互換性の高い方法で取得）
+        @Suppress("DEPRECATION")
+        val currentWord = intent.getParcelableExtra<Word>("WORD_DATA") ?: Word("爱", "ài", "愛する")
+
         if (isCorrect) {
             correctCount++
         }
         
-        // 仮の正解データ
-        val correctPinyin = "ài"
-        val hanzi = "爱"
-        val meaning = "愛する"
+        // 単語データ
+        val correctPinyin = currentWord.pinyin
+        val hanzi = currentWord.hanzi
+        val meaning = currentWord.meaning
 
         val tvResult = findViewById<TextView>(R.id.tvResult)
         val tvCorrectPinyin = findViewById<TextView>(R.id.tvCorrectPinyin)

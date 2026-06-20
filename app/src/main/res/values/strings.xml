@@ -18,9 +18,7 @@
         <item>5択</item>
     </string-array>
 
-    <string name="dummy_rank1">🥇 1000点 2026/06/18 21:30</string>
-    <string name="dummy_rank2">🥈 900点 2026/06/17 08:15</string>
-    <string name="dummy_rank3">🥉 850点 2026/06/16 22:05</string>
+    <string name="ranking_empty">まだ記録がありません</string>
 
     <string name="quiz_progress_format">問題 %1$d / %2$d</string>
     <string name="btn_play_audio">🔊 再生</string>

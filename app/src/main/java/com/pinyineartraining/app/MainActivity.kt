@@ -3,6 +3,7 @@ package com.pinyineartraining.app
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -22,13 +23,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         // UI要素の初期化
-        val tvHighScore = findViewById<TextView>(R.id.tvHighScore)
         val spinnerQuestions = findViewById<Spinner>(R.id.spinnerQuestions)
         val spinnerOptions = findViewById<Spinner>(R.id.spinnerOptions)
         val btnStart = findViewById<Button>(R.id.btnStart)
-
-        // 最高スコアの表示（仮データ）
-        tvHighScore.text = getString(R.string.high_score_format, 1000)
 
         // STARTボタンのクリックリスナー
         btnStart.setOnClickListener {
@@ -59,6 +56,47 @@ class MainActivity : AppCompatActivity() {
                 putParcelableArrayListExtra("WORD_LIST", ArrayList(sessionWords))
             }
             startActivity(intent)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        refreshRanking()
+    }
+
+    private fun refreshRanking() {
+        val tvHighScore = findViewById<TextView>(R.id.tvHighScore)
+        val rankingContainer = findViewById<LinearLayout>(R.id.rankingContainer)
+
+        // 最高スコアの表示
+        val highScore = ScoreRepository.getHighScore(this)
+        tvHighScore.text = getString(R.string.high_score_format, highScore)
+
+        // ランキングの表示
+        val scores = ScoreRepository.loadScores(this)
+        rankingContainer.removeAllViews()
+
+        if (scores.isEmpty()) {
+            val tv = TextView(this).apply {
+                text = getString(R.string.ranking_empty)
+                textSize = 14f
+            }
+            rankingContainer.addView(tv)
+        } else {
+            scores.forEachIndexed { index, record ->
+                val medal = when (index) {
+                    0 -> "🥇 "
+                    1 -> "🥈 "
+                    2 -> "🥉 "
+                    else -> "${index + 1}. "
+                }
+                val tv = TextView(this).apply {
+                    text = "$medal${record.score}点 ${record.achievedAt}"
+                    textSize = 14f
+                    setPadding(0, 0, 0, if (index < scores.size - 1) 4 else 0)
+                }
+                rankingContainer.addView(tv)
+            }
         }
     }
 }

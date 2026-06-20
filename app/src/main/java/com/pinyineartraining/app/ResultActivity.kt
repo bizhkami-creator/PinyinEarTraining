@@ -8,6 +8,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class ResultActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +29,19 @@ class ResultActivity : AppCompatActivity() {
         // スコア計算
         val score = correctCount * 100
         val accuracy = if (totalQuestions > 0) (correctCount.toDouble() / totalQuestions * 100).toInt() else 0
+
+        // スコアの保存（初回表示時のみ）
+        if (savedInstanceState == null) {
+            val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.getDefault())
+            val record = ScoreRecord(
+                score = score,
+                correctCount = correctCount,
+                totalQuestions = totalQuestions,
+                accuracy = accuracy,
+                achievedAt = dateFormat.format(Date())
+            )
+            ScoreRepository.saveScore(this, record)
+        }
 
         val tvCorrectCount = findViewById<TextView>(R.id.tvCorrectCount)
         val tvAccuracy = findViewById<TextView>(R.id.tvAccuracy)

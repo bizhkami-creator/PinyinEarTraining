@@ -43,6 +43,7 @@
             android:layout_marginBottom="8dp"/>
 
         <LinearLayout
+            android:id="@+id/rankingContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -53,19 +54,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/dummy_rank1"
-                android:textSize="14sp"
-                android:layout_marginBottom="4dp"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/dummy_rank2"
-                android:textSize="14sp"
-                android:layout_marginBottom="4dp"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/dummy_rank3"
+                android:text="まだ記録がありません"
                 android:textSize="14sp"/>
         </LinearLayout>
 

@@ -3,11 +3,13 @@ package com.pinyineartraining.app
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.CompoundButton
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
@@ -25,7 +27,16 @@ class MainActivity : AppCompatActivity() {
         // UI要素の初期化
         val spinnerQuestions = findViewById<Spinner>(R.id.spinnerQuestions)
         val spinnerOptions = findViewById<Spinner>(R.id.spinnerOptions)
+        val switchSound = findViewById<SwitchCompat>(R.id.switchSound)
         val btnStart = findViewById<Button>(R.id.btnStart)
+
+        // 設定の読み込み
+        val prefs = getSharedPreferences("pinyin_ear_training_prefs", MODE_PRIVATE)
+        switchSound.isChecked = prefs.getBoolean("key_sound_enabled", true)
+
+        switchSound.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit().putBoolean("key_sound_enabled", isChecked).apply()
+        }
 
         // STARTボタンのクリックリスナー
         btnStart.setOnClickListener {
@@ -66,11 +77,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun refreshRanking() {
         val tvHighScore = findViewById<TextView>(R.id.tvHighScore)
+        val tvWeakWordCount = findViewById<TextView>(R.id.tvWeakWordCount)
         val rankingContainer = findViewById<LinearLayout>(R.id.rankingContainer)
 
         // 最高スコアの表示
         val highScore = ScoreRepository.getHighScore(this)
         tvHighScore.text = getString(R.string.high_score_format, highScore)
+
+        // 苦手単語数の表示
+        val weakWordCount = WeakWordRepository.getWeakWordCount(this)
+        tvWeakWordCount.text = getString(R.string.weak_word_count_format, weakWordCount)
 
         // ランキングの表示
         val scores = ScoreRepository.loadScores(this)

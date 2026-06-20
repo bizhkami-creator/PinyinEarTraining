@@ -32,6 +32,17 @@
             tools:text="最高スコア 1000点"
             android:textAlignment="center"
             android:textSize="18sp"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:id="@+id/tvWeakWordCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/weak_word_count_format"
+            tools:text="苦手単語: 12語"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:textColor="#F44336"
             android:layout_marginBottom="24dp"/>
 
         <TextView
@@ -84,6 +95,15 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:entries="@array/options_count_options"
+            android:layout_marginBottom="16dp"/>
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchSound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/label_sound_enabled"
+            android:checked="true"
             android:layout_marginBottom="32dp"/>
 
         <Button

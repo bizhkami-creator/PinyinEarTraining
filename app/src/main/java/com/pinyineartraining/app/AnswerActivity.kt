@@ -2,7 +2,11 @@ package com.pinyineartraining.app
 
 import android.content.Intent
 import android.graphics.Color
+import android.media.AudioManager
+import android.media.ToneGenerator
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -12,6 +16,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class AnswerActivity : AppCompatActivity() {
+
+    private var toneGenerator: ToneGenerator? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,8 +43,31 @@ class AnswerActivity : AppCompatActivity() {
         @Suppress("DEPRECATION")
         val currentWord = intent.getParcelableExtra<Word>("WORD_DATA") ?: Word(1, "爱", "ài", "愛する")
 
+        // 設定の読み込み
+        val prefs = getSharedPreferences("pinyin_ear_training_prefs", MODE_PRIVATE)
+        val soundEnabled = prefs.getBoolean("key_sound_enabled", true)
+
+        if (soundEnabled) {
+            toneGenerator = ToneGenerator(AudioManager.STREAM_MUSIC, 100)
+            if (isCorrect) {
+                // 正解音: 「ピンポーン！」（高音150ms -> 低音400ms）
+                toneGenerator?.startTone(ToneGenerator.TONE_DTMF_3, 150)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    toneGenerator?.startTone(ToneGenerator.TONE_DTMF_1, 400)
+                }, 150)
+            } else {
+                // 不正解音: 「ブブー！」（低い音を長めに）
+                toneGenerator?.startTone(ToneGenerator.TONE_PROP_NACK, 400)
+            }
+        }
+
         if (isCorrect) {
             correctCount++
+        } else {
+            // 不正解の場合、苦手単語として保存（初回表示時のみ）
+            if (savedInstanceState == null) {
+                WeakWordRepository.addMistake(this, currentWord)
+            }
         }
         
         // 単語データ
@@ -91,5 +120,10 @@ class AnswerActivity : AppCompatActivity() {
             }
             finish()
         }
+    }
+
+    override fun onDestroy() {
+        toneGenerator?.release()
+        super.onDestroy()
     }
 }

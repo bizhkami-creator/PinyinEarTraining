@@ -32,7 +32,29 @@ object WeakWordRepository {
                 mistakeCount = 1
             ))
         }
+        saveWeakWords(context, weakWords)
+    }
 
+    /**
+     * 苦手単語のミス回数を減らす。0になったらリストから削除する。
+     * @return 削除された（克服した）場合はtrueを返す
+     */
+    fun reduceMistake(context: Context, word: Word): Boolean {
+        val weakWords = loadWeakWords(context).toMutableList()
+        val existing = weakWords.find { it.hanzi == word.hanzi && it.pinyin == word.pinyin } ?: return false
+        
+        existing.mistakeCount--
+        var removed = false
+        if (existing.mistakeCount <= 0) {
+            weakWords.remove(existing)
+            removed = true
+        }
+        
+        saveWeakWords(context, weakWords)
+        return removed
+    }
+
+    private fun saveWeakWords(context: Context, weakWords: List<WeakWord>) {
         val json = gson.toJson(weakWords)
         context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
             .edit()

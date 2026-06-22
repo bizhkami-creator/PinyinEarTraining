@@ -44,6 +44,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="正解: ài"/>
 
+    <TextView
+        android:id="@+id/tvOvercome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="✨ 苦手克服！ ✨"
+        android:textColor="#FF9800"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/tvCorrectPinyin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
     <LinearLayout
         android:id="@+id/wordInfoContainer"
         android:layout_width="match_parent"
@@ -52,8 +67,8 @@
         android:gravity="center"
         android:background="#F5F5F5"
         android:padding="32dp"
-        android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@id/tvCorrectPinyin">
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/tvOvercome">
 
         <TextView
             android:id="@+id/tvHanzi"

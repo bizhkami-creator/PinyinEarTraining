@@ -62,10 +62,26 @@ class AnswerActivity : AppCompatActivity() {
             }
         }
 
+        val tvResult = findViewById<TextView>(R.id.tvResult)
+        val tvUserAnswer = findViewById<TextView>(R.id.tvUserAnswer)
+        val tvCorrectPinyin = findViewById<TextView>(R.id.tvCorrectPinyin)
+        val tvOvercome = findViewById<TextView>(R.id.tvOvercome)
+        val tvHanzi = findViewById<TextView>(R.id.tvHanzi)
+        val tvPinyin = findViewById<TextView>(R.id.tvPinyin)
+        val tvMeaning = findViewById<TextView>(R.id.tvMeaning)
+        val btnNext = findViewById<Button>(R.id.btnNext)
+
         if (isCorrect) {
             correctCount++
+            // 正解の場合：復習モードならミス回数を減らす
+            if (mode == "review" && savedInstanceState == null) {
+                val removed = WeakWordRepository.reduceMistake(this, currentWord)
+                if (removed) {
+                    tvOvercome.visibility = View.VISIBLE
+                }
+            }
         } else {
-            // 不正解の場合、苦手単語として保存（初回表示時のみ）
+            // 不正解の場合：苦手単語として保存/更新（初回表示時のみ）
             if (savedInstanceState == null) {
                 WeakWordRepository.addMistake(this, currentWord)
             }
@@ -75,14 +91,6 @@ class AnswerActivity : AppCompatActivity() {
         val correctPinyin = currentWord.pinyin
         val hanzi = currentWord.hanzi
         val meaning = currentWord.meaning
-
-        val tvResult = findViewById<TextView>(R.id.tvResult)
-        val tvUserAnswer = findViewById<TextView>(R.id.tvUserAnswer)
-        val tvCorrectPinyin = findViewById<TextView>(R.id.tvCorrectPinyin)
-        val tvHanzi = findViewById<TextView>(R.id.tvHanzi)
-        val tvPinyin = findViewById<TextView>(R.id.tvPinyin)
-        val tvMeaning = findViewById<TextView>(R.id.tvMeaning)
-        val btnNext = findViewById<Button>(R.id.btnNext)
 
         if (isCorrect) {
             tvResult.text = getString(R.string.answer_correct)
@@ -96,6 +104,7 @@ class AnswerActivity : AppCompatActivity() {
             tvUserAnswer.visibility = View.VISIBLE
             tvCorrectPinyin.text = getString(R.string.answer_correct_pinyin_format, correctPinyin)
             tvCorrectPinyin.visibility = View.VISIBLE
+            tvOvercome.visibility = View.GONE
         }
 
         tvHanzi.text = hanzi

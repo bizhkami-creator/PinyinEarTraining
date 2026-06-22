@@ -77,6 +77,7 @@ class AnswerActivity : AppCompatActivity() {
         val meaning = currentWord.meaning
 
         val tvResult = findViewById<TextView>(R.id.tvResult)
+        val tvUserAnswer = findViewById<TextView>(R.id.tvUserAnswer)
         val tvCorrectPinyin = findViewById<TextView>(R.id.tvCorrectPinyin)
         val tvHanzi = findViewById<TextView>(R.id.tvHanzi)
         val tvPinyin = findViewById<TextView>(R.id.tvPinyin)
@@ -86,10 +87,13 @@ class AnswerActivity : AppCompatActivity() {
         if (isCorrect) {
             tvResult.text = getString(R.string.answer_correct)
             tvResult.setTextColor(Color.parseColor("#4CAF50")) // Green
+            tvUserAnswer.visibility = View.GONE
             tvCorrectPinyin.visibility = View.GONE
         } else {
             tvResult.text = getString(R.string.answer_incorrect)
             tvResult.setTextColor(Color.parseColor("#F44336")) // Red
+            tvUserAnswer.text = getString(R.string.answer_user_format, selectedPinyin)
+            tvUserAnswer.visibility = View.VISIBLE
             tvCorrectPinyin.text = getString(R.string.answer_correct_pinyin_format, correctPinyin)
             tvCorrectPinyin.visibility = View.VISIBLE
         }
@@ -115,6 +119,7 @@ class AnswerActivity : AppCompatActivity() {
             } else {
                 // 全問題終了、結果画面へ
                 val intent = Intent(this, ResultActivity::class.java).apply {
+                    putExtra("MODE", mode)
                     putExtra("TOTAL_QUESTIONS", totalQuestions)
                     putExtra("CORRECT_COUNT", correctCount)
                 }

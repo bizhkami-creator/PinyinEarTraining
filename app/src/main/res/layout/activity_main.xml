@@ -35,17 +35,6 @@
             android:layout_marginBottom="8dp"/>
 
         <TextView
-            android:id="@+id/tvWeakWordCount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/weak_word_count_format"
-            tools:text="苦手単語: 12語"
-            android:textAlignment="center"
-            android:textSize="16sp"
-            android:textColor="#F44336"
-            android:layout_marginBottom="24dp"/>
-
-        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/ranking_title"
@@ -60,14 +49,34 @@
             android:orientation="vertical"
             android:background="#F5F5F5"
             android:padding="12dp"
-            android:layout_marginBottom="32dp">
+            android:layout_marginBottom="16dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="まだ記録がありません"
+                android:text="@string/ranking_empty"
                 android:textSize="14sp"/>
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvWeakWordCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/weak_word_count_format"
+            tools:text="苦手単語: 12語"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:textColor="#F44336"
+            android:layout_marginBottom="16dp"/>
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchSound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/label_sound_enabled"
+            android:checked="true"
+            android:layout_marginBottom="24dp"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -95,16 +104,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:entries="@array/options_count_options"
-            android:layout_marginBottom="16dp"/>
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switchSound"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/label_sound_enabled"
-            android:checked="true"
-            android:layout_marginBottom="32dp"/>
+            android:layout_marginBottom="24dp"/>
 
         <Button
             android:id="@+id/btnStart"
@@ -119,7 +119,7 @@
             android:id="@+id/btnReview"
             android:layout_width="match_parent"
             android:layout_height="64dp"
-            android:text="苦手単語復習"
+            android:text="@string/btn_review_weak_words"
             android:textSize="20sp"
             android:textStyle="bold"
             android:backgroundTint="#FF9800"/>

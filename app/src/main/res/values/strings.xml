@@ -31,10 +31,15 @@
     <string name="answer_incorrect">不正解</string>
     <string name="answer_correct_pinyin_format">正解: %s</string>
     <string name="btn_next">次へ</string>
+    <string name="answer_user_format">あなたの回答: %s</string>
+    <string name="btn_review_weak_words">苦手単語復習</string>
+    <string name="toast_no_weak_words">苦手単語はありません</string>
+    <string name="quiz_mode_review">(復習)</string>
 
     <string name="result_title">お疲れ様でした！</string>
     <string name="result_correct_count_format">正解数: %1$d / %2$d</string>
     <string name="result_accuracy_format">正答率: %d%%</string>
     <string name="result_score_format">スコア: %d点</string>
+    <string name="result_review_note">復習モードの結果はランキングに保存されません</string>
     <string name="btn_go_home">ホームへ戻る</string>
 </resources>

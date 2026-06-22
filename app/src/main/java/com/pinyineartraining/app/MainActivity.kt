@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
         btnReview.setOnClickListener {
             val weakWords = WeakWordRepository.loadWeakWords(this)
             if (weakWords.isEmpty()) {
-                Toast.makeText(this, "苦手単語はありません", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.toast_no_weak_words), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 

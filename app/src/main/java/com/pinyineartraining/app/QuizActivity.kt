@@ -45,14 +45,18 @@ class QuizActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         // UI要素の初期化
         val tvProgress = findViewById<TextView>(R.id.tvProgress)
+        val quizProgressBar = findViewById<android.widget.ProgressBar>(R.id.quizProgressBar)
         val btnOption4 = findViewById<Button>(R.id.btnOption4)
         val btnOption5 = findViewById<Button>(R.id.btnOption5)
 
         // プログレス表示の更新
         tvProgress.text = getString(R.string.quiz_progress_format, currentQuestion, totalQuestions)
         if (mode == "review") {
-            tvProgress.append(" (復習)")
+            tvProgress.append(" " + getString(R.string.quiz_mode_review))
         }
+        
+        quizProgressBar.max = totalQuestions
+        quizProgressBar.progress = currentQuestion
 
         // 選択肢数に応じてボタンの表示/非表示を切り替え
         if (optionsCount == 3) {

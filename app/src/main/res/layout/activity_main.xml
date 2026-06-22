@@ -112,7 +112,17 @@
             android:layout_height="64dp"
             android:text="@string/btn_start"
             android:textSize="20sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp"/>
+
+        <Button
+            android:id="@+id/btnReview"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:text="苦手単語復習"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:backgroundTint="#FF9800"/>
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

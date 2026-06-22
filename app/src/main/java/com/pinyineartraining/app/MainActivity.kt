@@ -7,6 +7,7 @@ import android.widget.CompoundButton
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         val spinnerOptions = findViewById<Spinner>(R.id.spinnerOptions)
         val switchSound = findViewById<SwitchCompat>(R.id.switchSound)
         val btnStart = findViewById<Button>(R.id.btnStart)
+        val btnReview = findViewById<Button>(R.id.btnReview)
 
         // 設定の読み込み
         val prefs = getSharedPreferences("pinyin_ear_training_prefs", MODE_PRIVATE)
@@ -60,7 +62,35 @@ class MainActivity : AppCompatActivity() {
             val finalTotalQuestions = sessionWords.size
 
             val intent = Intent(this, QuizActivity::class.java).apply {
+                putExtra("MODE", "normal")
                 putExtra("TOTAL_QUESTIONS", finalTotalQuestions)
+                putExtra("OPTIONS_COUNT", optionsCount)
+                putExtra("CURRENT_QUESTION", 1)
+                putExtra("CORRECT_COUNT", 0)
+                putParcelableArrayListExtra("WORD_LIST", ArrayList(sessionWords))
+            }
+            startActivity(intent)
+        }
+
+        // 苦手単語復習ボタンのクリックリスナー
+        btnReview.setOnClickListener {
+            val weakWords = WeakWordRepository.loadWeakWords(this)
+            if (weakWords.isEmpty()) {
+                Toast.makeText(this, "苦手単語はありません", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val selectedOptionsStr = spinnerOptions.selectedItem.toString()
+            val optionsCount = selectedOptionsStr.replace("択", "").toInt()
+
+            // WeakWordをWordに変換してシャッフル
+            val sessionWords = weakWords.map { 
+                Word(it.level, it.hanzi, it.pinyin, it.meaning) 
+            }.shuffled()
+
+            val intent = Intent(this, QuizActivity::class.java).apply {
+                putExtra("MODE", "review")
+                putExtra("TOTAL_QUESTIONS", sessionWords.size)
                 putExtra("OPTIONS_COUNT", optionsCount)
                 putExtra("CURRENT_QUESTION", 1)
                 putExtra("CORRECT_COUNT", 0)

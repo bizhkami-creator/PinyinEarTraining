@@ -30,6 +30,7 @@ class AnswerActivity : AppCompatActivity() {
         }
 
         val isCorrect = intent.getBooleanExtra("IS_CORRECT", false)
+        val mode = intent.getStringExtra("MODE") ?: "normal"
         val selectedPinyin = intent.getStringExtra("SELECTED_PINYIN") ?: ""
         val totalQuestions = intent.getIntExtra("TOTAL_QUESTIONS", 10)
         val optionsCount = intent.getIntExtra("OPTIONS_COUNT", 3)
@@ -101,6 +102,7 @@ class AnswerActivity : AppCompatActivity() {
             if (currentQuestion < totalQuestions) {
                 // 次の問題へ
                 val intent = Intent(this, QuizActivity::class.java).apply {
+                    putExtra("MODE", mode)
                     putExtra("TOTAL_QUESTIONS", totalQuestions)
                     putExtra("OPTIONS_COUNT", optionsCount)
                     putExtra("CURRENT_QUESTION", currentQuestion + 1)

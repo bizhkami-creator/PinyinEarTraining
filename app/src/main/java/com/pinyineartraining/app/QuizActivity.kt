@@ -34,6 +34,7 @@ class QuizActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         tts = TextToSpeech(this, this)
 
         // Intentから設定を取得
+        val mode = intent.getStringExtra("MODE") ?: "normal"
         val totalQuestions = intent.getIntExtra("TOTAL_QUESTIONS", 10)
         val optionsCount = intent.getIntExtra("OPTIONS_COUNT", 3)
         val currentQuestion = intent.getIntExtra("CURRENT_QUESTION", 1)
@@ -49,6 +50,9 @@ class QuizActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         // プログレス表示の更新
         tvProgress.text = getString(R.string.quiz_progress_format, currentQuestion, totalQuestions)
+        if (mode == "review") {
+            tvProgress.append(" (復習)")
+        }
 
         // 選択肢数に応じてボタンの表示/非表示を切り替え
         if (optionsCount == 3) {
@@ -96,6 +100,7 @@ class QuizActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 val selectedPinyin = (it as Button).text.toString()
                 
                 val intent = Intent(this, AnswerActivity::class.java).apply {
+                    putExtra("MODE", mode)
                     putExtra("IS_CORRECT", selectedPinyin == correctPinyin)
                     putExtra("SELECTED_PINYIN", selectedPinyin)
                     putExtra("TOTAL_QUESTIONS", totalQuestions)

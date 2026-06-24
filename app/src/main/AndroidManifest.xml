@@ -30,6 +30,9 @@
         <activity
             android:name=".ResultActivity"
             android:exported="false" />
+        <activity
+            android:name=".WeakWordsActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

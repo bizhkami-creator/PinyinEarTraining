@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         val switchSound = findViewById<SwitchCompat>(R.id.switchSound)
         val btnStart = findViewById<Button>(R.id.btnStart)
         val btnReview = findViewById<Button>(R.id.btnReview)
+        val btnWeakWordsList = findViewById<Button>(R.id.btnWeakWordsList)
 
         // 設定の読み込み
         val prefs = getSharedPreferences("pinyin_ear_training_prefs", MODE_PRIVATE)
@@ -96,6 +97,12 @@ class MainActivity : AppCompatActivity() {
                 putExtra("CORRECT_COUNT", 0)
                 putParcelableArrayListExtra("WORD_LIST", ArrayList(sessionWords))
             }
+            startActivity(intent)
+        }
+
+        // 苦手単語一覧ボタンのクリックリスナー
+        btnWeakWordsList.setOnClickListener {
+            val intent = Intent(this, WeakWordsActivity::class.java)
             startActivity(intent)
         }
     }

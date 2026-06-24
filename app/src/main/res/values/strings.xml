@@ -33,6 +33,9 @@
     <string name="btn_next">次へ</string>
     <string name="answer_user_format">あなたの回答: %s</string>
     <string name="btn_review_weak_words">苦手単語復習</string>
+    <string name="btn_weak_words_list">苦手単語一覧</string>
+    <string name="title_weak_words">苦手単語一覧</string>
+    <string name="label_mistake_count">間違い回数: %d</string>
     <string name="toast_no_weak_words">苦手単語はありません</string>
     <string name="quiz_mode_review">(復習)</string>
 

@@ -122,7 +122,17 @@
             android:text="@string/btn_review_weak_words"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:backgroundTint="#FF9800"/>
+            android:backgroundTint="#FF9800"
+            android:layout_marginBottom="16dp"/>
+
+        <Button
+            android:id="@+id/btnWeakWordsList"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:text="@string/btn_weak_words_list"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:backgroundTint="#9C27B0"/>
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // UI要素の初期化
+        val spinnerLevel = findViewById<Spinner>(R.id.spinnerLevel)
         val spinnerQuestions = findViewById<Spinner>(R.id.spinnerQuestions)
         val spinnerOptions = findViewById<Spinner>(R.id.spinnerOptions)
         val switchSound = findViewById<SwitchCompat>(R.id.switchSound)
@@ -36,13 +37,34 @@ class MainActivity : AppCompatActivity() {
         // 設定の読み込み
         val prefs = getSharedPreferences("pinyin_ear_training_prefs", MODE_PRIVATE)
         switchSound.isChecked = prefs.getBoolean("key_sound_enabled", true)
+        
+        // HSKレベルの初期選択
+        val savedLevel = prefs.getInt("key_hsk_level", 1) // 1 to 6
+        spinnerLevel.setSelection(savedLevel - 1)
 
         switchSound.setOnCheckedChangeListener { _, isChecked ->
             prefs.edit().putBoolean("key_sound_enabled", isChecked).apply()
         }
 
+        spinnerLevel.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: android.view.View?, position: Int, id: Long) {
+                val selectedLevel = position + 1
+                prefs.edit().putInt("key_hsk_level", selectedLevel).apply()
+                refreshRanking() // レベルに応じて表示を更新
+            }
+            override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
+        }
+
         // STARTボタンのクリックリスナー
         btnStart.setOnClickListener {
+            val selectedLevel = spinnerLevel.selectedItemPosition + 1
+            
+            // データが存在するか確認
+            if (!WordRepository.isLevelAvailable(this, selectedLevel)) {
+                Toast.makeText(this, "このレベルのデータはまだありません", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             val selectedQuestionsStr = spinnerQuestions.selectedItem.toString()
             val selectedOptionsStr = spinnerOptions.selectedItem.toString()
             
@@ -51,7 +73,7 @@ class MainActivity : AppCompatActivity() {
             val optionsCount = selectedOptionsStr.replace("択", "").toInt()
 
             // 単語リストを読み込んでランダムに抽出
-            val allWords = WordRepository.loadWords(this)
+            val allWords = WordRepository.loadWords(this, selectedLevel)
             val shuffledWords = allWords.shuffled()
             val sessionWords = if (shuffledWords.size > totalQuestions) {
                 shuffledWords.take(totalQuestions)
@@ -75,7 +97,8 @@ class MainActivity : AppCompatActivity() {
 
         // 苦手単語復習ボタンのクリックリスナー
         btnReview.setOnClickListener {
-            val weakWords = WeakWordRepository.loadWeakWords(this)
+            val selectedLevel = spinnerLevel.selectedItemPosition + 1
+            val weakWords = WeakWordRepository.loadWeakWordsByLevel(this, selectedLevel)
             if (weakWords.isEmpty()) {
                 Toast.makeText(this, getString(R.string.toast_no_weak_words), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -102,7 +125,10 @@ class MainActivity : AppCompatActivity() {
 
         // 苦手単語一覧ボタンのクリックリスナー
         btnWeakWordsList.setOnClickListener {
-            val intent = Intent(this, WeakWordsActivity::class.java)
+            val selectedLevel = spinnerLevel.selectedItemPosition + 1
+            val intent = Intent(this, WeakWordsActivity::class.java).apply {
+                putExtra("LEVEL", selectedLevel)
+            }
             startActivity(intent)
         }
     }
@@ -116,13 +142,16 @@ class MainActivity : AppCompatActivity() {
         val tvHighScore = findViewById<TextView>(R.id.tvHighScore)
         val tvWeakWordCount = findViewById<TextView>(R.id.tvWeakWordCount)
         val rankingContainer = findViewById<LinearLayout>(R.id.rankingContainer)
+        val spinnerLevel = findViewById<Spinner>(R.id.spinnerLevel)
+        
+        val selectedLevel = spinnerLevel.selectedItemPosition + 1
 
-        // 最高スコアの表示
+        // 最高スコアの表示（現時点ではレベル分けしていないが、将来のために取得ロジックは維持）
         val highScore = ScoreRepository.getHighScore(this)
         tvHighScore.text = getString(R.string.high_score_format, highScore)
 
-        // 苦手単語数の表示
-        val weakWordCount = WeakWordRepository.getWeakWordCount(this)
+        // 苦手単語数の表示（選択レベルのみ）
+        val weakWordCount = WeakWordRepository.getWeakWordCountByLevel(this, selectedLevel)
         tvWeakWordCount.text = getString(R.string.weak_word_count_format, weakWordCount)
 
         // ランキングの表示

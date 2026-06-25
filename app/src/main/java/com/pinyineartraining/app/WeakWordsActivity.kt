@@ -23,8 +23,10 @@ class WeakWordsActivity : AppCompatActivity() {
 
         val rvWeakWords = findViewById<RecyclerView>(R.id.rvWeakWords)
         val tvEmptyMessage = findViewById<TextView>(R.id.tvEmptyMessage)
+        
+        val selectedLevel = intent.getIntExtra("LEVEL", 1)
 
-        val weakWords = WeakWordRepository.loadWeakWords(this)
+        val weakWords = WeakWordRepository.loadWeakWordsByLevel(this, selectedLevel)
             .sortedByDescending { it.mistakeCount }
 
         if (weakWords.isEmpty()) {

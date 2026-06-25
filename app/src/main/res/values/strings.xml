@@ -1,13 +1,23 @@
 <resources>
-    <string name="app_name">ピンイン耳トレ - HSK1級対応</string>
+    <string name="app_name">ピンイン耳トレ</string>
     <string name="title_home">ピンイン耳トレ</string>
     <string name="high_score_format">最高スコア %d点</string>
     <string name="weak_word_count_format">苦手単語: %d語</string>
     <string name="ranking_title">ランキング</string>
+    <string name="label_hsk_level">HSKレベル:</string>
     <string name="label_questions_count">問題数:</string>
     <string name="label_options_count">選択肢数:</string>
     <string name="label_sound_enabled">効果音</string>
     <string name="btn_start">START</string>
+
+    <string-array name="hsk_level_options">
+        <item>HSK1</item>
+        <item>HSK2</item>
+        <item>HSK3</item>
+        <item>HSK4</item>
+        <item>HSK5</item>
+        <item>HSK6</item>
+    </string-array>
 
     <string-array name="questions_count_options">
         <item>10問</item>

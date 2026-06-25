@@ -70,7 +70,15 @@ object WeakWordRepository {
         return gson.fromJson(json, type) ?: emptyList()
     }
 
+    fun loadWeakWordsByLevel(context: Context, level: Int): List<WeakWord> {
+        return loadWeakWords(context).filter { it.level == level }
+    }
+
     fun getWeakWordCount(context: Context): Int {
         return loadWeakWords(context).size
+    }
+
+    fun getWeakWordCountByLevel(context: Context, level: Int): Int {
+        return loadWeakWordsByLevel(context, level).size
     }
 }

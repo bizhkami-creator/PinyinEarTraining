@@ -37,12 +37,12 @@ data class Word(
 
 object WordRepository {
     private const val TAG = "WordRepository"
-    private const val CSV_FILE = "hsk1_words.csv"
 
-    fun loadWords(context: Context): List<Word> {
+    fun loadWords(context: Context, level: Int): List<Word> {
         val wordList = mutableListOf<Word>()
+        val fileName = "hsk${level}_words.csv"
         try {
-            val inputStream = context.assets.open(CSV_FILE)
+            val inputStream = context.assets.open(fileName)
             val reader = BufferedReader(InputStreamReader(inputStream))
             
             // Skip header
@@ -52,23 +52,28 @@ object WordRepository {
             while (line != null) {
                 val tokens = line.split(",")
                 if (tokens.size >= 4) {
-                    val level = tokens[0].toIntOrNull() ?: 1
+                    val levelVal = tokens[0].toIntOrNull() ?: level
                     val hanzi = tokens[1]
                     val pinyin = tokens[2]
                     val meaning = tokens[3]
-                    wordList.add(Word(level, hanzi, pinyin, meaning))
+                    wordList.add(Word(levelVal, hanzi, pinyin, meaning))
                 }
                 line = reader.readLine()
             }
             reader.close()
         } catch (e: Exception) {
-            Log.e(TAG, "Error loading CSV: ${e.message}")
-            // Fallback to minimal data if CSV loading fails
-            if (wordList.isEmpty()) {
-                wordList.add(Word(1, "爱", "ài", "愛する"))
-            }
+            Log.e(TAG, "Error loading CSV ($fileName): ${e.message}")
         }
         return wordList
+    }
+
+    fun isLevelAvailable(context: Context, level: Int): Boolean {
+        return try {
+            context.assets.open("hsk${level}_words.csv").close()
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 }
 
